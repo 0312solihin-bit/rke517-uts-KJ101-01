@@ -7,8 +7,7 @@
 **Organization:** RSU Permata Bekasi, Cikarang  
 **Client named in the Case Brief & Interview:** Ibu Endang Susilowati, Senior Medical Records Clerk  
 **Proposed system:** Medical Record File Loan Tracking App  
-**Status:** v1.0 working draft; operational details marked as open questions remain subject to client confirmation.
-
+**Status:** Version 1.1 — updated to include CR-1, the weekly overdue-file report grouped by borrowing unit.
 ## A1. Problem and goal
 
 RSU Permata Bekasi currently records physical medical-record file loans in a handwritten loan book and uses tracer cards to mark files removed from their shelves. The client reports that two or three folders per week become difficult to trace, late returns may only be noticed when a file is needed again, and handwritten entries can be difficult to read or become wet. **The goal is to design a small application that records each loan and return, shows the current location and responsible borrower, tracks the 48-hour return period, records approval when a file leaves the building, and supports both screen-oriented staff and staff who still rely on the loan book.**
@@ -35,7 +34,7 @@ The case describes RSU Permata Bekasi as a type C general hospital in Cikarang, 
 
 ## A4. Requirements and acceptance checks
 
-The eight requirements below are deliberately limited to the client's stated problem and the evidence in the four case sources. Where the exact operational rule is not yet stated, the requirement is marked as provisional and linked to an open question.
+The nine requirements below describe the client's stated problem, the evidence in the four case sources, and the approved CR-1 change. Where an operational detail is not yet specified, the requirement is marked as provisional and linked to an open question.
 
 | ID | Requirement | Type / source | Acceptance check: Situation → Action → Result |
 |---|---|---|---|
@@ -46,10 +45,10 @@ The eight requirements below are deliberately limited to the client's stated pro
 | **R-05** | The app shall allow an authorized filing clerk to record that a borrowed file has physically returned and close the active loan, while retaining the completed loan details as history. | Functional. Current process interview; Form RM-47 has a Returned field. Recording an exact return timestamp is a proposed detail to support the 48-hour rule and must be confirmed because the paper form currently shows a return date field only. | **Situation:** A borrowed folder is physically returned to the records room. → **Action:** The filing clerk opens its active loan and records the return date and, if confirmed, the exact return time/system timestamp. → **Result:** The loan is closed, the file's current state changes to available, and the completed loan remains in the history. |
 | **R-06** | The app shall provide a searchable view of active and overdue loans so authorized staff can identify the file, borrowing unit, responsible borrower, and due-back date for follow-up. | Functional. Client's stated need for everyone to see status and the reported problem of late returns. | **Situation:** A staff member needs to find files that have not returned by their due-back time. → **Action:** The staff member filters the loan list to active or overdue loans. → **Result:** The app shows each outstanding file with its borrowing unit, borrower, and due-back date/time so the responsible staff can follow it up. |
 | **R-07** | The app shall provide a contact-extension field for a borrower or borrowing unit, with the final field meaning and whether it is mandatory to be confirmed by the client. Until confirmed, the field shall be optional. | Data / functional. Staff Chat: Mbak Tika asks that an extension number be written because locating the borrower took 20 minutes. | **Situation:** A loan is registered and a valid extension number is supplied. → **Action:** The filing clerk enters the extension in the designated contact field. → **Result:** Authorized staff can use the saved extension to contact the responsible borrower or unit; a loan can still be saved when no extension has been confirmed as mandatory. |
-| **R-08** | The solution shall support an agreed paper-assisted working method for staff who prefer the loan book and a documented fallback/reconciliation method for periods when the app is unavailable, so that paper and digital records do not conflict. The exact routine use of paper versus downtime-only use must be agreed with the client. | Operational / non-functional. Interview and voice-note transcript: the client says screen-oriented staff and staff who prefer the book must both be able to work, and asks what happens if the app breaks. | **Situation:** The app or network is unavailable, or a staff member needs to use the paper process. → **Action:** Staff use the approved paper fallback and later reconcile the loan/return into the app under the agreed responsibility and procedure. → **Result:** Physical file movements remain recorded and the app's status is brought back into agreement with the paper record without silently losing or duplicating a transaction. |
-
+| **R-08** | The solution shall support an agreed paper-assisted working method for staff who prefer the loan book and a documented fallback/reconciliation method for periods when the app is unavailable, so that paper and digital records do not conflict. The exact routine use of paper versus downtime-only use must be agreed with the client. | Operational / non-functional. Interview and voice-note transcript: the client says screen-oriented staff and staff who prefer the book must both be able to work, and asks what happens if the app breaks. | **Situation:** The app or network is unavailable, or a staff member needs to use the paper process. → **Action:** Staff use the approved paper fallback and later reconcile the loan/return into the app under the agreed responsibility and procedure. → **Result:** Physical file movements remain recorded and the app's status is brought back into agreement with the paper record without silently losing or duplicating a transaction.  |
+| **R-09** | The app shall allow an authorized medical-records clerk to generate a weekly list of overdue physical medical-record file loans, grouped by borrowing unit, so the clerk can prepare and send each unit's overdue list to its respective unit head. A loan is included when its due-back date/time has passed and it has not been recorded as returned. | Functional. CR-1 — client request from Ibu Endang Susilowati, 12 November 2026. | **Situation:** The clerk needs to prepare the weekly overdue-file list. → **Action:** The clerk generates the report for the relevant weekly reporting period. → **Result:** The app displays overdue files grouped by borrowing unit, with relevant file-loan details, due-back date/time, and return status, so each unit's list can be prepared for its unit head. |
 ## A5. Open questions for the client
-
+ 
 | ID | Question / evidence difference | Why it matters | Proposed clarification / working position |
 |---|---|---|---|
 | **OQ-01** | The interview says a unit may keep a borrowed file for **3 days**. Form RM-47 rev. 2 states **2 × 24 hours**, and the later voice-note transcript says **two by 24 hours** and asks the app to follow that. | The return deadline and overdue status depend on the authoritative period and the event that starts the clock. The form captures a date but not a time, so using an exact timestamp is a proposed design detail. | For the v1.0 working design, use **48 hours** because the paper form and later voice-note clarification agree. Ask the client to confirm whether the clock starts when the clerk records the loan or when the folder physically leaves the records room, whether the app must capture loan/return times in addition to dates, and whether weekends/holidays count. |
@@ -63,7 +62,7 @@ The eight requirements below are deliberately limited to the client's stated pro
 | **OQ-09** | The client wants to see every file's status, but the sources do not specify who follows up an overdue file or whether reminders are required. | A visible overdue list may not be enough to ensure timely return if follow-up responsibility is unclear. | Confirm who monitors overdue loans, when follow-up occurs, and whether the app should send reminders or simply display an overdue list. |
 
 ## A6. Initial scope boundary
-
+ Generating a weekly overdue-file report grouped by borrowing unit for preparation and distribution by the medical-records clerk to each respective unit head.
 ### Candidate IN scope
 
 - Registering a physical medical-record file loan.
@@ -91,14 +90,14 @@ The eight requirements below are deliberately limited to the client's stated pro
 | **03 — Current Paper Form (Form RM-47 rev. 2)** | Fields: Date, RM No., Patient name, Borrowing unit, Borrower, Signature, Due back, Returned. Printed rules: return within 2 × 24 hours after borrowing; Head of Medical Records approval only for loans that leave the building. |
 | **04 — Staff Chat** | Staff report a recurring problem with RM number 12-34-56; Mbak Nia says the handwriting in the book is unclear; Mbak Tika asks that an extension number be written because she spent 20 minutes looking for the borrower; Ibu Endang supports forwarding the suggestion. |
 
-## A8. Analyst decisions for the v1.0 working draft
+## A8. Analyst decisions for the v1.1 release
 
 1. **Return period:** Use 48 hours as the working rule because Form RM-47 rev. 2 and the later voice-note transcript agree. Keep the exact clock-start event, timestamp capture, and weekend/holiday treatment open for confirmation.
 2. **Client identity:** Retain “Ibu Endang Susilowati” as the name in the Case Brief, and record “Andang Susilawati” as the name stated in the voice-note transcript. Confirm whether they refer to the same person.
 3. **Extension number:** Include it as an optional candidate field because it appears in the staff chat; do not make it mandatory until the client confirms whose extension it is and how it should be used.
 4. **Paper and digital use:** Include a paper-assisted/downtime requirement because the client explicitly says both book-oriented and screen-oriented staff must be able to work. Do not decide yet whether paper runs routinely in parallel or only during downtime.
 5. **System boundary:** Track the movement and status of physical folders only; clinical content is outside the requested system.
-
+6. **Weekly overdue report (CR-1):** Add a weekly report of unreturned loans whose due-back date/time has passed, grouped by borrowing unit. The medical-records clerk prepares the respective unit lists for the unit heads. The 48-hour loan period and the existing approval rule for files taken outside the building remain unchanged.
 ---
 
 **Student review note:** Before committing this file to GitHub, read each requirement and open question, verify that it matches the case sources, and be ready to explain the provisional choices in your own words.
